@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --background: 255 255 255;
+    --foreground: 24 24 27;
+  }
+
+  * {
+    border-color: #e4e4e7;
+  }
+
+  body {
+    background-color: #fafafa;
+    color: #18181b;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Accessible focus indicators */
+  :focus-visible {
+    outline: 2px solid #059669;
+    outline-offset: 2px;
+  }
+}

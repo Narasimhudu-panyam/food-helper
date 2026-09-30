@@ -1,0 +1,113 @@
+import enum
+
+
+class UserRole(str, enum.Enum):
+    FOOD_BUSINESS = "FOOD_BUSINESS"
+    ORGANIZATION = "ORGANIZATION"
+    VOLUNTEER = "VOLUNTEER"
+    ADMIN = "ADMIN"
+
+
+class BusinessType(str, enum.Enum):
+    RESTAURANT = "RESTAURANT"
+    SUPERMARKET = "SUPERMARKET"
+    BAKERY = "BAKERY"
+    HOTEL = "HOTEL"
+    CATERER = "CATERER"
+    OTHER = "OTHER"
+
+
+class OrgType(str, enum.Enum):
+    SHELTER = "SHELTER"
+    FOOD_BANK = "FOOD_BANK"
+    SOUP_KITCHEN = "SOUP_KITCHEN"
+    COMMUNITY_PANTRY = "COMMUNITY_PANTRY"
+    OTHER = "OTHER"
+
+
+class OrgVerificationStatus(str, enum.Enum):
+    PENDING = "PENDING"
+    VERIFIED = "VERIFIED"
+    REJECTED = "REJECTED"
+    SUSPENDED = "SUSPENDED"
+
+
+class VehicleType(str, enum.Enum):
+    FOOT_BIKE = "FOOT_BIKE"
+    CAR = "CAR"
+    VAN_TRUCK = "VAN_TRUCK"
+    OTHER = "OTHER"
+
+
+class FoodCategory(str, enum.Enum):
+    PREPARED_MEALS = "PREPARED_MEALS"
+    BAKERY = "BAKERY"
+    PRODUCE = "PRODUCE"
+    DAIRY = "DAIRY"
+    MEAT = "MEAT"
+    PACKAGED = "PACKAGED"
+    OTHER = "OTHER"
+
+
+class QuantityUnit(str, enum.Enum):
+    KG = "KG"
+    PORTIONS = "PORTIONS"
+    TRAYS = "TRAYS"
+    BOXES = "BOXES"
+    ITEMS = "ITEMS"
+
+
+class StorageCondition(str, enum.Enum):
+    ROOM_TEMPERATURE = "ROOM_TEMPERATURE"
+    REFRIGERATED = "REFRIGERATED"
+    FROZEN = "FROZEN"
+    HOT_HOLDING = "HOT_HOLDING"
+
+
+class DonationStatus(str, enum.Enum):
+    DRAFT = "DRAFT"
+    CREATED = "CREATED"
+    MATCHED = "MATCHED"
+    ACCEPTED = "ACCEPTED"
+    PICKUP_ASSIGNED = "PICKUP_ASSIGNED"
+    IN_TRANSIT = "IN_TRANSIT"
+    DELIVERED = "DELIVERED"
+    CANCELLED = "CANCELLED"
+    EXPIRED = "EXPIRED"
+    FAILED_DELIVERY = "FAILED_DELIVERY"
+
+
+class MatchStatus(str, enum.Enum):
+    PROPOSED = "PROPOSED"
+    INVITED = "INVITED"
+    ACCEPTED = "ACCEPTED"
+    DECLINED = "DECLINED"
+    EXPIRED = "EXPIRED"
+    REVOKED = "REVOKED"
+
+
+class TransportMode(str, enum.Enum):
+    ORG_DIRECT = "ORG_DIRECT"
+    VOLUNTEER = "VOLUNTEER"
+
+
+class PickupStatus(str, enum.Enum):
+    ASSIGNED = "ASSIGNED"
+    EN_ROUTE_TO_PICKUP = "EN_ROUTE_TO_PICKUP"
+    ARRIVED_AT_PICKUP = "ARRIVED_AT_PICKUP"
+    IN_TRANSIT = "IN_TRANSIT"
+    DELIVERED = "DELIVERED"
+    FAILED = "FAILED"
+    CANCELLED = "CANCELLED"
+
+
+class NotificationType(str, enum.Enum):
+    MATCH_INVITATION = "MATCH_INVITATION"
+    MATCH_ACCEPTED = "MATCH_ACCEPTED"
+    MATCH_DECLINED = "MATCH_DECLINED"
+    PICKUP_ASSIGNED = "PICKUP_ASSIGNED"
+    PICKUP_STATUS_UPDATE = "PICKUP_STATUS_UPDATE"
+    DONATION_DELIVERED = "DONATION_DELIVERED"
+    DONATION_CANCELLED = "DONATION_CANCELLED"
+    VERIFICATION_STATUS_CHANGED = "VERIFICATION_STATUS_CHANGED"
+    SYSTEM_ALERT = "SYSTEM_ALERT"
