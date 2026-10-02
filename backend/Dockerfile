@@ -18,14 +18,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir --user -r requirements.txt
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 # Final runtime image
 FROM python:3.12-slim AS runner
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PATH=/root/.local/bin:$PATH \
     PORT=8000
 
 WORKDIR /app
@@ -37,8 +36,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy installed Python packages from builder stage
-COPY --from=builder /root/.local /root/.local
+# Copy installed Python packages and binaries from builder stage
+COPY --from=builder /install /usr/local
 
 # Create non-privileged service user
 RUN useradd -m -u 10001 appuser && \
