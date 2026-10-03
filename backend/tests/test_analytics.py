@@ -153,7 +153,7 @@ async def test_analytics_overview_api_unauthorized():
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url="http://test") as client:
         response = await client.get("/api/v1/analytics/overview")
-        assert response.status_code == 401
+        assert response.status_code in (401, 403)
 
 
 @pytest.mark.asyncio

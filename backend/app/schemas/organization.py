@@ -121,6 +121,15 @@ class OrganizationAdminVerificationUpdate(BaseModel):
     )
 
 
+class OrganizationRejectRequest(BaseModel):
+    reason: str = Field(
+        ...,
+        min_length=3,
+        max_length=500,
+        description="Detailed reason for rejecting the organization verification application",
+    )
+
+
 class OrganizationResponse(OrganizationBase):
     model_config = ConfigDict(from_attributes=True)
 
@@ -131,3 +140,9 @@ class OrganizationResponse(OrganizationBase):
     current_capacity_kg: Decimal
     created_at: datetime
     updated_at: datetime
+
+
+class AdminOrganizationResponse(OrganizationResponse):
+    owner_email: Optional[str] = Field(None, description="Email address of the organization owner account")
+    is_active: bool = Field(True, description="Whether the organization owner user account is active")
+

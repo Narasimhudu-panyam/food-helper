@@ -200,6 +200,23 @@ export interface OrganizationUpdate {
   operating_hours?: Record<string, any> | null;
 }
 
+export interface AdminOrganization extends Organization {
+  owner_email?: string | null;
+  is_active?: boolean;
+}
+
+export interface OrganizationRejectRequest {
+  reason: string;
+}
+
+export interface AdminOrganizationListParams {
+  verification_status?: OrgVerificationStatus;
+  search?: string;
+  limit?: number;
+  offset?: number;
+}
+
+
 export interface Volunteer {
   id: string;
   user_id: string;

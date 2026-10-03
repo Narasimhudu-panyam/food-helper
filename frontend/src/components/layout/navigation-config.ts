@@ -72,8 +72,8 @@ export const ROLE_NAVIGATION: Record<UserRole, NavSection[]> = {
       title: "Administration",
       items: [
         { title: "Operations Overview", href: "/app/admin", icon: Home },
-        { title: "Verification Queue", href: "/app/admin/verifications", icon: ShieldCheck, disabled: true, badge: "Next" },
-        { title: "All Organizations", href: "/app/admin/organizations", icon: Building2, disabled: true, badge: "Next" },
+        { title: "Verification Queue", href: "/app/admin/verifications", icon: ShieldCheck },
+        { title: "All Organizations", href: "/app/admin/organizations", icon: Building2 },
         { title: "All Users", href: "/app/admin/users", icon: Users, disabled: true, badge: "Next" },
       ],
     },
