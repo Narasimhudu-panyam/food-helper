@@ -54,3 +54,47 @@ class UserResponse(BaseModel):
     is_verified: bool
     created_at: datetime
     updated_at: datetime
+
+
+class BusinessProfileSummary(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    business_name: str
+    business_type: str
+    address_text: str
+    contact_phone: str
+
+
+class OrganizationProfileSummary(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    org_name: str
+    org_type: str
+    verification_status: str
+    address_text: str
+    contact_phone: str
+    max_capacity_kg: float
+
+
+class VolunteerProfileSummary(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    full_name: str
+    vehicle_type: str
+    contact_phone: str
+    is_available: bool
+
+
+class AdminUserResponse(UserResponse):
+    profile_name: Optional[str] = Field(None, description="Name of the associated business, organization, or volunteer")
+    display_name: Optional[str] = Field(None, description="Alias for profile_name or human-friendly name")
+
+
+class AdminUserDetailResponse(UserResponse):
+    business_profile: Optional[BusinessProfileSummary] = None
+    organization_profile: Optional[OrganizationProfileSummary] = None
+    volunteer_profile: Optional[VolunteerProfileSummary] = None
+

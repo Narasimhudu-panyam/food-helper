@@ -74,8 +74,9 @@ export const ROLE_NAVIGATION: Record<UserRole, NavSection[]> = {
         { title: "Operations Overview", href: "/app/admin", icon: Home },
         { title: "Verification Queue", href: "/app/admin/verifications", icon: ShieldCheck },
         { title: "All Organizations", href: "/app/admin/organizations", icon: Building2 },
-        { title: "All Users", href: "/app/admin/users", icon: Users, disabled: true, badge: "Next" },
+        { title: "All Users", href: "/app/admin/users", icon: Users },
       ],
     },
   ],
 };
+

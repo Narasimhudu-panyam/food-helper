@@ -11,10 +11,19 @@ from app.schemas.organization import (
     AdminOrganizationResponse,
     OrganizationRejectRequest,
 )
+from app.schemas.user import (
+    AdminUserDetailResponse,
+    AdminUserResponse,
+)
 from app.services.organization_service import OrganizationService
+from app.services.user_service import UserService
 
 router = APIRouter(prefix="/admin", tags=["Admin"])
 
+
+# =========================================================================
+# Organization Management Endpoints
+# =========================================================================
 
 @router.get(
     "/organizations",
@@ -107,3 +116,108 @@ async def reject_admin_organization(
         reason=reject_data.reason,
         ip_address=client_ip,
     )
+
+
+# =========================================================================
+# User Management Endpoints
+# =========================================================================
+
+@router.get(
+    "/users",
+    response_model=List[AdminUserResponse],
+    summary="List registered platform users with administrative status and profile context",
+)
+async def list_admin_users(
+    search: Optional[str] = Query(
+        None,
+        description="Search query matching user email address",
+    ),
+    role: Optional[UserRole] = Query(
+        None,
+        description="Filter by user system role",
+    ),
+    is_active: Optional[bool] = Query(
+        None,
+        description="Filter by account active status",
+    ),
+    is_verified: Optional[bool] = Query(
+        None,
+        description="Filter by account email/domain verification status",
+    ),
+    limit: int = Query(50, ge=1, le=100, description="Max records to return"),
+    offset: int = Query(0, ge=0, description="Pagination offset"),
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
+    db: AsyncSession = Depends(get_async_db),
+) -> List[AdminUserResponse]:
+    return await UserService.list_admin_users(
+        db=db,
+        search=search,
+        role=role,
+        is_active=is_active,
+        is_verified=is_verified,
+        limit=limit,
+        offset=offset,
+    )
+
+
+@router.get(
+    "/users/{user_id}",
+    response_model=AdminUserDetailResponse,
+    summary="Retrieve complete user profile details and associated domain summary",
+)
+async def get_admin_user(
+    user_id: UUID,
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
+    db: AsyncSession = Depends(get_async_db),
+) -> AdminUserDetailResponse:
+    user = await UserService.get_admin_user_by_id(
+        db=db,
+        user_id=user_id,
+    )
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with ID '{user_id}' not found",
+        )
+    return user
+
+
+@router.post(
+    "/users/{user_id}/activate",
+    response_model=AdminUserDetailResponse,
+    summary="Activate a platform user account",
+)
+async def activate_admin_user(
+    user_id: UUID,
+    request: Request,
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
+    db: AsyncSession = Depends(get_async_db),
+) -> AdminUserDetailResponse:
+    client_ip = request.client.host if request.client else None
+    return await UserService.activate_user(
+        db=db,
+        user_id=user_id,
+        admin_user=current_user,
+        ip_address=client_ip,
+    )
+
+
+@router.post(
+    "/users/{user_id}/deactivate",
+    response_model=AdminUserDetailResponse,
+    summary="Deactivate a platform user account (with admin self-deactivation protection)",
+)
+async def deactivate_admin_user(
+    user_id: UUID,
+    request: Request,
+    current_user: User = Depends(require_role(UserRole.ADMIN)),
+    db: AsyncSession = Depends(get_async_db),
+) -> AdminUserDetailResponse:
+    client_ip = request.client.host if request.client else None
+    return await UserService.deactivate_user(
+        db=db,
+        user_id=user_id,
+        admin_user=current_user,
+        ip_address=client_ip,
+    )
+

@@ -216,6 +216,59 @@ export interface AdminOrganizationListParams {
   offset?: number;
 }
 
+export interface BusinessProfileSummary {
+  id: string;
+  business_name: string;
+  business_type: BusinessType;
+  contact_phone: string;
+  address_text: string;
+}
+
+export interface OrganizationProfileSummary {
+  id: string;
+  org_name: string;
+  org_type: OrgType;
+  contact_phone: string;
+  address_text: string;
+  verification_status: OrgVerificationStatus;
+}
+
+export interface VolunteerProfileSummary {
+  id: string;
+  full_name: string;
+  contact_phone: string;
+  vehicle_type: VehicleType;
+  is_available: boolean;
+}
+
+export interface AdminUser {
+  id: string;
+  email: string;
+  role: UserRole;
+  is_active: boolean;
+  is_verified: boolean;
+  created_at: string;
+  updated_at: string;
+  display_name?: string | null;
+  profile_name?: string | null;
+}
+
+
+export interface AdminUserDetail extends AdminUser {
+  business_profile?: BusinessProfileSummary | null;
+  organization_profile?: OrganizationProfileSummary | null;
+  volunteer_profile?: VolunteerProfileSummary | null;
+}
+
+export interface AdminUserListParams {
+  role?: UserRole;
+  is_active?: boolean;
+  is_verified?: boolean;
+  search?: string;
+  limit?: number;
+  offset?: number;
+}
+
 
 export interface Volunteer {
   id: string;

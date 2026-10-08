@@ -103,7 +103,9 @@ describe("Admin Navigation & UI Components", () => {
     expect(orgsItem?.disabled).toBeFalsy();
     expect(orgsItem?.href).toBe("/app/admin/organizations");
 
-    expect(usersItem?.disabled).toBe(true);
+    expect(usersItem).toBeDefined();
+    expect(usersItem?.disabled).toBeFalsy();
+    expect(usersItem?.href).toBe("/app/admin/users");
   });
 
   it("renders verification status badges with appropriate semantics", () => {
