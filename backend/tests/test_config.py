@@ -47,3 +47,15 @@ def test_cors_origins_list():
 def test_cors_origins_empty_string():
     settings = Settings(CORS_ORIGINS="")
     assert settings.CORS_ORIGINS == []
+
+
+def test_cors_origins_default_includes_deployed_frontend(monkeypatch):
+    monkeypatch.delenv("CORS_ORIGINS", raising=False)
+    settings = Settings()
+    assert "https://food-helper-swart.vercel.app" in settings.CORS_ORIGINS
+
+
+def test_cors_origins_strips_trailing_slashes():
+    settings = Settings(CORS_ORIGINS="https://food-helper-swart.vercel.app/, http://localhost:3000/")
+    assert settings.CORS_ORIGINS == ["https://food-helper-swart.vercel.app", "http://localhost:3000"]
+

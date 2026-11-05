@@ -16,6 +16,7 @@ class Settings(BaseSettings):
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://localhost:8000",
+        "https://food-helper-swart.vercel.app",
     ]
 
     @field_validator("CORS_ORIGINS", mode="before")
@@ -29,12 +30,12 @@ class Settings(BaseSettings):
                 try:
                     parsed = json.loads(v)
                     if isinstance(parsed, list):
-                        return [str(i).strip() for i in parsed if str(i).strip()]
+                        return [str(i).strip().rstrip("/") for i in parsed if str(i).strip()]
                 except Exception:
                     pass
-            return [i.strip() for i in v.split(",") if i.strip()]
+            return [i.strip().rstrip("/") for i in v.split(",") if i.strip()]
         elif isinstance(v, list):
-            return [str(i).strip() for i in v if str(i).strip()]
+            return [str(i).strip().rstrip("/") for i in v if str(i).strip()]
         return []
 
     # Database Settings

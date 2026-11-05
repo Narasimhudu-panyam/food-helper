@@ -31,7 +31,7 @@ class ApiClient {
   private refreshSubscribers: QueuedRequest[] = [];
 
   constructor(baseURL: string) {
-    this.baseURL = baseURL;
+    this.baseURL = baseURL.replace(/\/+$/, "");
   }
 
   private onRefreshed(token: string) {

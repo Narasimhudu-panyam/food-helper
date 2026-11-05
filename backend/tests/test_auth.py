@@ -292,3 +292,50 @@ async def test_api_get_me_unauthorized_and_authorized():
             assert "password_hash" not in data
     finally:
         app.dependency_overrides.clear()
+
+
+@pytest.mark.asyncio
+async def test_cors_preflight_and_headers_for_deployed_frontend():
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+        # Preflight OPTIONS request
+        response = await client.options(
+            "/api/v1/auth/login",
+            headers={
+                "Origin": "https://food-helper-swart.vercel.app",
+                "Access-Control-Request-Method": "POST",
+                "Access-Control-Request-Headers": "Content-Type, Authorization",
+            },
+        )
+        assert response.status_code == 200
+        assert response.headers.get("access-control-allow-origin") == "https://food-helper-swart.vercel.app"
+        assert response.headers.get("access-control-allow-credentials") == "true"
+
+        # Health endpoint GET request with Origin
+        get_resp = await client.get(
+            "/health",
+            headers={"Origin": "https://food-helper-swart.vercel.app"},
+        )
+        assert get_resp.status_code == 200
+        assert get_resp.headers.get("access-control-allow-origin") == "https://food-helper-swart.vercel.app"
+
+
+@pytest.mark.asyncio
+async def test_cors_headers_preserved_on_500_exception():
+    # Define a temporary route that raises an unhandled exception to test CORS on error
+    @app.get("/api/v1/test-error-for-cors")
+    async def temp_failing_route():
+        raise RuntimeError("Simulated database connection failure")
+
+    try:
+        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
+            resp = await client.get(
+                "/api/v1/test-error-for-cors",
+                headers={"Origin": "https://food-helper-swart.vercel.app"},
+            )
+            assert resp.status_code == 500
+            assert resp.headers.get("access-control-allow-origin") == "https://food-helper-swart.vercel.app"
+            assert resp.json() == {"detail": "An internal server error occurred. Please try again later."}
+    finally:
+        # Clean up route
+        app.routes[:] = [r for r in app.routes if getattr(r, "path", None) != "/api/v1/test-error-for-cors"]
+

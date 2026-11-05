@@ -68,7 +68,9 @@ function LoginForm() {
           ? "Invalid email or password. Please verify your credentials."
           : err?.status === 0
           ? "Unable to connect to the server. Please check your connection."
-          : err?.detail || "An unexpected error occurred during sign in. Please try again.";
+          : err?.status >= 500
+          ? err?.detail || "Server error. The service may be temporarily unavailable or connecting to the database."
+          : err?.detail || err?.message || "An unexpected error occurred during sign in. Please try again.";
       setServerError(message);
     } finally {
       setIsSubmitting(false);

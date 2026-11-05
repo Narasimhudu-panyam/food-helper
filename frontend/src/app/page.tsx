@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Building2, HeartHandshake, Package2, ShieldCheck, Truck } from "lucide-react";
+import { ArrowRight, Building2, HeartHandshake, Package2, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
@@ -35,11 +35,6 @@ export default function HomePage() {
       {/* Main Hero / Portal Content */}
       <main className="flex-1 flex flex-col justify-center">
         <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 sm:py-24">
-          <div className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-800 mb-6">
-            <ShieldCheck className="mr-1.5 h-3.5 w-3.5 text-emerald-600" />
-            Production-Ready Food Surplus Coordination Platform
-          </div>
-
           <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900 sm:text-5xl">
             Direct, Geospatial Food Waste to Donation Matching
           </h1>

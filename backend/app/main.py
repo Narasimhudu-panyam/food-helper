@@ -1,5 +1,7 @@
+import logging
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from sqlalchemy import text
 
@@ -7,10 +9,19 @@ from app.api.v1.router import api_v1_router
 from app.core.config import settings
 from app.core.database import async_engine
 
+logger = logging.getLogger(__name__)
+
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        response: Response = await call_next(request)
+        try:
+            response: Response = await call_next(request)
+        except Exception as exc:
+            logger.exception("Unhandled exception processing %s %s: %s", request.method, request.url, exc)
+            response = JSONResponse(
+                status_code=500,
+                content={"detail": "An internal server error occurred. Please try again later."},
+            )
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
@@ -42,6 +53,16 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
+
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    """Handle unhandled exceptions and return structured JSON with CORS headers preserved."""
+    logger.exception("Unhandled error occurred processing request %s %s: %s", request.method, request.url, exc)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "An internal server error occurred. Please try again later."},
+    )
 
 # Mount API Routers
 app.include_router(api_v1_router, prefix=settings.API_V1_STR)
