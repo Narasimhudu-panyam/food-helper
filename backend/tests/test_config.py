@@ -59,3 +59,9 @@ def test_cors_origins_strips_trailing_slashes():
     settings = Settings(CORS_ORIGINS="https://food-helper-swart.vercel.app/, http://localhost:3000/")
     assert settings.CORS_ORIGINS == ["https://food-helper-swart.vercel.app", "http://localhost:3000"]
 
+
+def test_async_database_url_converts_sslmode():
+    settings = Settings(DATABASE_URL="postgresql://user:pass@ep-cool.supabase.co:5432/postgres?sslmode=require")
+    assert settings.async_database_url == "postgresql+asyncpg://user:pass@ep-cool.supabase.co:5432/postgres?ssl=require"
+
+

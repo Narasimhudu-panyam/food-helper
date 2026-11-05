@@ -83,15 +83,21 @@ async def health_check() -> dict:
 async def readiness_check() -> dict:
     """System readiness check including PostgreSQL database connectivity."""
     db_status = "healthy"
+    db_error = None
     try:
         async with async_engine.connect() as conn:
             await conn.execute(text("SELECT 1"))
     except Exception as e:
+        logger.exception("Database readiness check failed: %s", e)
         db_status = "unreachable"
+        db_error = f"{type(e).__name__}: {str(e)}"
 
     is_ready = db_status == "healthy"
-    return {
+    response_data = {
         "status": "ready" if is_ready else "degraded",
         "database": db_status,
         "environment": settings.ENVIRONMENT,
     }
+    if db_error:
+        response_data["database_error"] = db_error
+    return response_data
